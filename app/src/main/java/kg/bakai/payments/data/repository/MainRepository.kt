@@ -1,6 +1,5 @@
 package kg.bakai.payments.data.repository
 
-import com.orhanobut.logger.Logger.d
 import kg.bakai.payments.data.model.AuthResponse
 import kg.bakai.payments.data.model.Payment
 import kg.bakai.payments.data.model.Resource
@@ -19,6 +18,10 @@ class MainRepository(
 
     fun checkSession(): Boolean {
         return !sessionManager.fetchAuthToken().isNullOrEmpty()
+    }
+
+    fun removeToken() {
+        sessionManager.removeAuthToken()
     }
 
     suspend fun login(login: String, password: String): Resource<AuthResponse> {
@@ -51,7 +54,6 @@ class MainRepository(
         return when (val response = apiService.getPayments(sessionManager.fetchAuthToken()!!).awaitResult()) {
             is Result.Ok -> {
                 val data = response.value.response
-                d(data)
                 Resource.success(data)
             }
             is Result.Error -> {
@@ -62,9 +64,5 @@ class MainRepository(
                 Resource.error(null, "$data")
             }
         }
-    }
-
-    fun removeToken() {
-        sessionManager.removeAuthToken()
     }
 }

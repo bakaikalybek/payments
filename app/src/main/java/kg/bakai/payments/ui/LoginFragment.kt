@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import kg.bakai.payments.R
 import kg.bakai.payments.data.model.Status
 import kg.bakai.payments.databinding.FragmentLoginBinding
@@ -22,7 +20,7 @@ class LoginFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
@@ -34,7 +32,6 @@ class LoginFragment : Fragment() {
         binding.apply {
             btnEnter.setOnClickListener {
                 val isFormValid = validate()
-
                 if (isFormValid) {
                     loginViewModel.login(etLogin.text.toString(), etPassword.text.toString())
                 }
@@ -43,17 +40,13 @@ class LoginFragment : Fragment() {
 
 
         loginViewModel.apply {
-            if (checkSession()) {
-                findNavController().navigate(R.id.action_navigation_login_to_navigation_home)
-            }
+            if(checkSession()) navController.navigate(R.id.action_navigation_login_to_navigation_home)
             loginResponse.observe(viewLifecycleOwner) { resource ->
-                when (resource.status) {
+                when (resource?.status) {
                     Status.SUCCESS -> {
-                        findNavController().navigate(R.id.action_navigation_login_to_navigation_home)
+                        if(checkSession()) navController.navigate(R.id.action_navigation_login_to_navigation_home)
                     }
-                    Status.ERROR -> {
-                        Toast.makeText(requireContext(), resource.message.toString(), Toast.LENGTH_SHORT).show()
-                    }
+                    else -> Toast.makeText(requireContext(), resource?.message.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
         }

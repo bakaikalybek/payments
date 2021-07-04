@@ -1,14 +1,11 @@
 package kg.bakai.payments.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
-import kg.bakai.payments.MainActivity
 import kg.bakai.payments.R
 import kg.bakai.payments.data.model.Status
 import kg.bakai.payments.databinding.FragmentHomeBinding
@@ -31,7 +28,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navController = Navigation.findNavController(view)
+
         homeViewModel.getPayments()
+
         binding.apply {
             val adapter = PaymentsAdapter()
             recyclerView.adapter = adapter
@@ -44,13 +43,8 @@ class HomeFragment : Fragment() {
                 when (resource.status) {
                     Status.SUCCESS -> {
                         adapter.submitItems(resource.data)
-                        if (resource.data != null) {
-                            recyclerView.visibility = View.VISIBLE
-                            btnExit.visibility = View.VISIBLE
-                        } else {
-                            recyclerView.visibility = View.GONE
-                            btnExit.visibility = View.GONE
-                        }
+                        recyclerView.visibility = View.VISIBLE
+                        btnExit.visibility = View.VISIBLE
                         swipeLayout.isRefreshing = false
                     }
                     Status.LOADING -> {
@@ -67,7 +61,7 @@ class HomeFragment : Fragment() {
 
             btnExit.setOnClickListener {
                 homeViewModel.logOut()
-                findNavController().navigateUp()
+                navController.navigate(R.id.action_navigation_home_to_navigation_login)
             }
         }
 

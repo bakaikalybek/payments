@@ -3,11 +3,9 @@ package kg.bakai.payments.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kg.bakai.payments.data.model.AuthResponse
 import kg.bakai.payments.data.model.Payment
 import kg.bakai.payments.data.model.Resource
 import kg.bakai.payments.data.repository.MainRepository
-import kg.bakai.payments.util.SessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
